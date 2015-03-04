@@ -2,6 +2,7 @@
 #define TOPN_H
 
 #include <stdlib.h>
+#include "structs.h"
 
 typedef struct topn_ topn_t;
 
@@ -19,10 +20,6 @@ int topn_is_empty(topn_t* topn);
 
 int topn_add(topn_t* topn, int key, double value);
 
-int topn_add_all(topn_t* topn, int n, int* keys, double* values);
-
-int* topn_get_keys(topn_t* topn);
-
-double* topn_get_values(topn_t* topn);
+idpairs_t* topn_get_pairs(topn_t* topn);
 
 #endif

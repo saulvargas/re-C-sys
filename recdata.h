@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-struct recdata_ {
+typedef struct recdata_ {
     int N_users;
     int N_items;
     int N_prefs;
@@ -14,9 +14,7 @@ struct recdata_ {
     int* (* v_users)(int uidx, void* args);
     void (* close)(void* args);
     void* args;
-};
-
-typedef struct recdata_ recdata_t;
+} recdata_t;
 
 int recdata_n_items(recdata_t* recdata, int uid);
 

@@ -14,7 +14,7 @@ int main(int argc, char** argv) {
     int uid;
     int i;
     similarity_t* similarity;
-    sim_t* sim;
+    idpairs_t* pairs;
 
     (void) argc;
     (void) argv;
@@ -33,15 +33,15 @@ int main(int argc, char** argv) {
     similarity = similarity_cosine0_create(recdata);
 
     for (uid = 0; uid < recdata->N_users; uid++) {
-        sim = similarity_calculate(similarity, uid, 10);
+        pairs = similarity_calculate(similarity, uid, 10);
 
-        for (i = 0; i < sim->n; i++) {
-            printf("%d\t%d\t%.4f\n", uid, sim->uids[i], sim->sims[i]);
+        for (i = 0; i < pairs->n; i++) {
+            printf("%d\t%d\t%.4f\n", uid, pairs->keys[i], pairs->values[i]);
         }
         
-        free(sim->uids);
-        free(sim->sims);
-        free(sim);
+        free(pairs->keys);
+        free(pairs->values);
+        free(pairs);
     }
  
     similarity_close(similarity);

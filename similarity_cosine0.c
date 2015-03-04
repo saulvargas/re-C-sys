@@ -4,7 +4,7 @@
 #include "similarity.h"
 #include "topn.h"
 
-sim_t* similarity_cosine0_calculate(int uid, int N, void* args) {
+idpairs_t* similarity_cosine0_calculate(int uid, int k, void* args) {
     recdata_t* recdata;
     int* coo;
     int n1;
@@ -16,7 +16,7 @@ sim_t* similarity_cosine0_calculate(int uid, int N, void* args) {
     int vid;
     int iid;
     topn_t* topn;
-    sim_t* sim;
+    idpairs_t* pairs;
     
     recdata = args;
     
@@ -36,7 +36,7 @@ sim_t* similarity_cosine0_calculate(int uid, int N, void* args) {
     
     coo[uid] = 0;
     
-    topn = topn_create(N);
+    topn = topn_create(k);
     for (vid = 0; vid < recdata->N_users; vid++) {
         if (coo[vid] > 0) {
             topn_add(topn, vid, coo[vid] / sqrt(n1 * recdata_n_items(recdata, vid)));
@@ -44,17 +44,12 @@ sim_t* similarity_cosine0_calculate(int uid, int N, void* args) {
     }
     
     free(coo);
-    
-    sim = malloc(sizeof(sim_t));
-    sim->n = topn_size(topn);
-    sim->uids = malloc(sim->n * sizeof(int));
-    memcpy(sim->uids, topn_get_keys(topn), sim->n * sizeof(int));
-    sim->sims = malloc(sim->n * sizeof(double));
-    memcpy(sim->sims, topn_get_values(topn), sim->n * sizeof(double));
+
+    pairs = topn_get_pairs(topn);
     
     topn_close(topn);
 
-    return sim;
+    return pairs;
 }
 
 void similarity_cosine0_close(void* args) {

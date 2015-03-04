@@ -4,22 +4,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "recdata.h"
+#include "structs.h"
 
-typedef struct {
-    int n;
-    int* uids;
-    double* sims;
-} sim_t;
-
-struct similarity_ {
-    sim_t* (* calculate)(int uid, int k, void* args);
+typedef struct similarity_ {
+    idpairs_t* (* calculate)(int uid, int k, void* args);
     void (* close)(void* args);
     void* args;
-};
+} similarity_t;
 
-typedef struct similarity_ similarity_t;
-
-sim_t* similarity_calculate(similarity_t* sim, int uid, int k);
+idpairs_t* similarity_calculate(similarity_t* sim, int uid, int k);
 
 void similarity_close(similarity_t* sim);
 

@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "topn.h"
 
 struct topn_ {
@@ -110,18 +111,6 @@ int topn_is_empty(topn_t* topn) {
     return topn->size == 0;
 }
 
-int topn_add_all(topn_t* topn, int n, int* keys, double* values) {
-    int i;
-    int c;
-    
-    c = 0;
-    for (i = 0; i < n; i++) {
-        c += topn_add(topn, keys[i], values[i]);
-    }
-    
-    return c;
-}
-
 int topn_add(topn_t* topn, int key, double value) {
     int i;
     int j;
@@ -157,10 +146,13 @@ int topn_add(topn_t* topn, int key, double value) {
     }
 }
 
-int* topn_get_keys(topn_t* topn) {
-    return topn->keys;
-}
-
-double* topn_get_values(topn_t* topn) {
-    return topn->values;
+idpairs_t* topn_get_pairs(topn_t* topn) {
+    idpairs_t* pairs = malloc(sizeof(idpairs_t));
+    pairs->n = topn_size(topn);
+    pairs->keys = malloc(pairs->n * sizeof(int));
+    memcpy(pairs->keys, topn->keys, pairs->n * sizeof(int));
+    pairs->values = malloc(pairs->n * sizeof(double));
+    memcpy(pairs->values, topn->values, pairs->n * sizeof(double));
+    
+    return pairs;
 }

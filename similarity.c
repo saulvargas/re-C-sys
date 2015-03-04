@@ -1,6 +1,6 @@
 #include "similarity.h"
 
-sim_t* similarity_calculate(similarity_t* sim, int uid, int k) {
+idpairs_t* similarity_calculate(similarity_t* sim, int uid, int k) {
     return sim->calculate(uid, k, sim->args);
 }
 
