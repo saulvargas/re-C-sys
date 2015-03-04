@@ -3,7 +3,7 @@ CFLAGS = -Wall -Wextra -pedantic-errors -g
 LDLIBS = -lm
 
 EXE = test_recdata test_similarity
-OBJ = recdata.o recdata_simple.o recdata_transposed.o similarity.o similarity_cosine0.c
+OBJ = recdata.o recdata_simple.o recdata_transposed.o similarity.o similarity_cosine0.c topn.c
 
 all : $(EXE)
 

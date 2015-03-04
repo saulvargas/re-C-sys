@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "recdata.h"
 #include "similarity.h"
+#include "topn.h"
 
 int main(int argc, char** argv) {
     FILE* user_data;
@@ -30,12 +31,14 @@ int main(int argc, char** argv) {
     fclose(item_data);
 
     similarity = similarity_cosine0_create(recdata);
-    
+
     for (uid = 0; uid < recdata->N_users; uid++) {
-        sim = similarity_calculate(similarity, uid);
+        sim = similarity_calculate(similarity, uid, 10);
+
         for (i = 0; i < sim->n; i++) {
             printf("%d\t%d\t%.4f\n", uid, sim->uids[i], sim->sims[i]);
         }
+        
         free(sim->uids);
         free(sim->sims);
         free(sim);
