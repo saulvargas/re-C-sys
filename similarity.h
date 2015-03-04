@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "recdata.h"
-#include "structs.h"
+#include "aux.h"
 
 typedef struct similarity_ {
     idpairs_t* (* calculate)(int uid, int k, void* args);

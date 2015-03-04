@@ -3,6 +3,7 @@
 #include "recdata.h"
 #include "similarity.h"
 #include "topn.h"
+#include "recommender.h"
 
 int main(int argc, char** argv) {
     FILE* user_data;
@@ -14,6 +15,7 @@ int main(int argc, char** argv) {
     int uid;
     int i;
     similarity_t* similarity;
+    recommender_t* recommender;
     idpairs_t* pairs;
 
     (void) argc;
@@ -32,8 +34,10 @@ int main(int argc, char** argv) {
 
     similarity = similarity_cosine0_create(recdata);
 
+    recommender = recommender_ubknn_create(recdata, similarity, 100);
+
     for (uid = 0; uid < recdata->N_users; uid++) {
-        pairs = similarity_calculate(similarity, uid, 10);
+        pairs = recommender_recommend(recommender, uid, 5);
 
         for (i = 0; i < idpairs_size(pairs); i++) {
             printf("%d\t%d\t%.4f\n", uid, idpairs_keys(pairs)[i], idpairs_values(pairs)[i]);
@@ -41,6 +45,8 @@ int main(int argc, char** argv) {
         
         idpairs_close(pairs);
     }
+ 
+    recommender_close(recommender);
  
     similarity_close(similarity);
     

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "topn.h"
+#include "aux.h"
 
 struct topn_ {
     int* keys;
@@ -147,12 +148,9 @@ int topn_add(topn_t* topn, int key, double value) {
 }
 
 idpairs_t* topn_get_pairs(topn_t* topn) {
-    idpairs_t* pairs = malloc(sizeof(idpairs_t));
-    pairs->n = topn_size(topn);
-    pairs->keys = malloc(pairs->n * sizeof(int));
-    memcpy(pairs->keys, topn->keys, pairs->n * sizeof(int));
-    pairs->values = malloc(pairs->n * sizeof(double));
-    memcpy(pairs->values, topn->values, pairs->n * sizeof(double));
+    idpairs_t* pairs = idpairs_create(topn_size(topn), malloc(topn_size(topn) * sizeof(int)), malloc(topn_size(topn) * sizeof(double)));
+    memcpy(idpairs_keys(pairs), topn->keys, topn_size(topn) * sizeof(int));
+    memcpy(idpairs_values(pairs), topn->values, topn_size(topn) * sizeof(double));
     
     return pairs;
 }
