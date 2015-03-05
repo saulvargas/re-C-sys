@@ -16,14 +16,15 @@ int main(int argc, char** argv) {
     similarity_t* similarity;
     idpairs_t* pairs;
 
-    (void) argc;
-    (void) argv;
+    if (argc != 4) {
+        return EXIT_FAILURE;
+    }    
     
-    user_data = fopen("ml1M_data/total_u.txt", "r");
-    item_data = fopen("ml1M_data/total_i.txt", "r");
-    N_users = 6040;
-    N_items = 3706;
-    N_prefs = 1000209;
+    user_data = fopen("total_u.txt", "r");
+    item_data = fopen("total_i.txt", "r");
+    N_users = atoi(argv[1]);
+    N_items = atoi(argv[2]);
+    N_prefs = atoi(argv[3]);
 
     recdata = recdata_simple_create(user_data, item_data, N_users, N_items, N_prefs);
     
@@ -33,7 +34,7 @@ int main(int argc, char** argv) {
     similarity = similarity_cosine0_create(recdata);
 
     for (uid = 0; uid < recdata->N_users; uid++) {
-        pairs = similarity_calculate(similarity, uid, 10);
+        pairs = similarity_calculate(similarity, uid, 100);
 
         for (i = 0; i < idpairs_size(pairs); i++) {
             printf("%d\t%d\t%.4f\n", uid, idpairs_keys(pairs)[i], idpairs_values(pairs)[i]);
