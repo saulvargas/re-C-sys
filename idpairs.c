@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "aux.h"
+#include "idpairs.h"
 
 struct idpairs_ {
     int n;

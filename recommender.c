@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "aux.h"
+#include "idpairs.h"
 #include "recommender.h"
 
 idpairs_t* recommender_recommend(recommender_t* recommender, int uid, int n) {

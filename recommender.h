@@ -1,7 +1,7 @@
 #ifndef RECOMMENDER_H
 #define RECOMMENDER_H
 
-#include "aux.h"
+#include "idpairs.h"
 #include "recdata.h"
 #include "similarity.h"
 

@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "topn.h"
-#include "aux.h"
+#include "idpairs.h"
 
 struct topn_ {
     int* keys;

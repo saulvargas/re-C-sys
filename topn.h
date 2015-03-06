@@ -2,7 +2,7 @@
 #define TOPN_H
 
 #include <stdlib.h>
-#include "aux.h"
+#include "idpairs.h"
 
 typedef struct topn_ topn_t;
 

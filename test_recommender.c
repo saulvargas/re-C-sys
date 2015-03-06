@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
     recommender = recommender_ubknn_create(recdata, similarity, 100);
 
     for (uid = 0; uid < recdata->N_users; uid++) {
-        pairs = recommender_recommend(recommender, uid, 5);
+        pairs = recommender_recommend(recommender, uid, 100);
 
         for (i = 0; i < idpairs_size(pairs); i++) {
             printf("%d\t%d\t%.4f\n", uid, idpairs_keys(pairs)[i], idpairs_values(pairs)[i]);
