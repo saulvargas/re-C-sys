@@ -1,19 +1,19 @@
 #include "recdata.h"
 
-int recdata_n_items(recdata_t* recdata, int uid) {
-    return recdata->n_items(uid, recdata->args);
+int recdata_userdata_size(recdata_t* recdata, int uid) {
+    return recdata->userdata_size(uid, recdata->args);
 }
 
-int* recdata_v_items(recdata_t* recdata, int uid) {
-    return recdata->v_items(uid, recdata->args);
+int recdata_itemdata_size(recdata_t* recdata, int iid) {
+    return recdata->itemdata_size(iid, recdata->args);
 }
 
-int recdata_n_users(recdata_t* recdata, int iid) {
-    return recdata->n_users(iid, recdata->args);
+idpairs_t* recdata_userdata(recdata_t* recdata, int uid) {
+    return recdata->userdata(uid, recdata->args);
 }
 
-int* recdata_v_users(recdata_t* recdata, int iid) {
-    return recdata->v_users(iid, recdata->args);
+idpairs_t* recdata_itemdata(recdata_t* recdata, int iid) {
+    return recdata->itemdata(iid, recdata->args);
 }
 
 void recdata_close(recdata_t* recdata) {

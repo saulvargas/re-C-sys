@@ -10,20 +10,24 @@ typedef struct {
     int** v_users;
 } recdata_simple_args_t;
 
-int recdata_simple_n_items(int uid, void* args) {
-    return ((recdata_simple_args_t*) args)->n_items[uid];
+int recdata_simple_userdata_size(int uid, void* args) {
+    recdata_simple_args_t* a = args;
+    return a->n_items[uid];
 }
 
-int* recdata_simple_v_items(int uid, void* args) {
-    return ((recdata_simple_args_t*) args)->v_items[uid];
+int recdata_simple_itemdata_size(int iid, void* args) {
+    recdata_simple_args_t* a = args;
+    return a->n_users[iid];
 }
 
-int recdata_simple_n_users(int iid, void* args) {
-    return ((recdata_simple_args_t*) args)->n_users[iid];
+idpairs_t* recdata_simple_userdata(int uid, void* args) {
+    recdata_simple_args_t* a = args;
+    return idpairs_create(a->n_items[uid], a->v_items[uid], NULL);
 }
 
-int* recdata_simple_v_users(int iid, void* args) {
-    return ((recdata_simple_args_t*) args)->v_users[iid];
+idpairs_t* recdata_simple_itemdata(int iid, void* args) {
+    recdata_simple_args_t* a = args;
+    return idpairs_create(a->n_users[iid], a->v_users[iid], NULL);
 }
 
 void recdata_simple_close(void* args) {
@@ -79,10 +83,10 @@ recdata_t* recdata_simple_create(FILE* user_data, FILE* item_data, int N_users, 
     recdata->N_items = N_items;
     recdata->N_prefs = N_prefs;
     
-    recdata->n_items = recdata_simple_n_items;
-    recdata->v_items = recdata_simple_v_items;
-    recdata->n_users = recdata_simple_n_users;
-    recdata->v_users = recdata_simple_v_users;
+    recdata->userdata_size = recdata_simple_userdata_size;
+    recdata->itemdata_size = recdata_simple_itemdata_size;
+    recdata->userdata = recdata_simple_userdata;
+    recdata->itemdata = recdata_simple_itemdata;
     recdata->close = recdata_simple_close;
     
     args = malloc(sizeof(recdata_simple_args_t));

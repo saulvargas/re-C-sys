@@ -7,10 +7,8 @@
 idpairs_t* similarity_cosine0_calculate(int uid, int k, void* args) {
     recdata_t* recdata;
     int* coo;
-    int n1;
-    int n2;
-    int* v1;
-    int* v2;
+    idpairs_t* ud;
+    idpairs_t* id;
     int i;
     int j;
     int vid;
@@ -22,24 +20,24 @@ idpairs_t* similarity_cosine0_calculate(int uid, int k, void* args) {
     
     coo = calloc(recdata->N_users, sizeof(int));
     
-    n1 = recdata_n_items(recdata, uid);
-    v1 = recdata_v_items(recdata, uid);
-    for (i = 0; i < n1; i++) {
-        iid = v1[i];
-        n2 = recdata_n_users(recdata, iid);
-        v2 = recdata_v_users(recdata, iid);
-        for (j = 0; j < n2; j++) {
-            vid = v2[j];
+    ud = recdata_userdata(recdata, uid);
+    for (i = 0; i < idpairs_size(ud); i++) {
+        iid = idpairs_keys(ud)[i];
+        id = recdata_userdata(recdata, iid);
+        for (j = 0; j < idpairs_size(id); j++) {
+            vid = idpairs_keys(id)[j];
             coo[vid]++;
         }
+        idpairs_close_shallow(id);
     }
+    idpairs_close_shallow(ud);
     
     coo[uid] = 0;
     
     topn = topn_create(k);
     for (vid = 0; vid < recdata->N_users; vid++) {
         if (coo[vid] > 0) {
-            topn_add(topn, vid, coo[vid] / sqrt(n1 * recdata_n_items(recdata, vid)));
+            topn_add(topn, vid, coo[vid] / sqrt(recdata_userdata_size(recdata, uid) * recdata_userdata_size(recdata, vid)));
         }
     }
     

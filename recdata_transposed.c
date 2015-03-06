@@ -11,10 +11,10 @@ recdata_t* recdata_transposed_create(recdata_t* recdata0) {
     recdata->N_items = recdata0->N_users;
     recdata->N_prefs = recdata0->N_prefs;
     
-    recdata->n_items = recdata0->n_users;
-    recdata->v_items = recdata0->v_users;
-    recdata->n_users = recdata0->n_items;
-    recdata->v_users = recdata0->v_items;
+    recdata->userdata_size = recdata0->itemdata_size;
+    recdata->itemdata_size = recdata0->userdata_size;
+    recdata->userdata = recdata0->itemdata;
+    recdata->itemdata = recdata0->userdata;
     recdata->close = recdata0->close;
     
     recdata->args = NULL;

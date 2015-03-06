@@ -17,9 +17,13 @@ idpairs_t* idpairs_create(int n, int* keys, double* values) {
     return pairs;
 }
 
-void idpairs_close(idpairs_t* pairs) {
+void idpairs_close_deep(idpairs_t* pairs) {
     free(pairs->keys);
     free(pairs->values);
+    free(pairs);
+}
+
+void idpairs_close_shallow(idpairs_t* pairs) {
     free(pairs);
 }
 

@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
             printf("%d\t%d\t%.4f\n", uid, idpairs_keys(pairs)[i], idpairs_values(pairs)[i]);
         }
         
-        idpairs_close(pairs);
+        idpairs_close_deep(pairs);
     }
  
     similarity_close(similarity);
