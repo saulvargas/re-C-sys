@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
     fclose(user_data);
     fclose(item_data);
 
-    similarity = similarity_cosine0_create(recdata);
+    similarity = similarity_setcosine_create(recdata);
 
     recommender = recommender_ubknn_create(recdata, similarity, 100);
 

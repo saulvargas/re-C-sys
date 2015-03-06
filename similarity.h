@@ -16,6 +16,8 @@ idpairs_t* similarity_calculate(similarity_t* sim, int uid, int k);
 
 void similarity_close(similarity_t* sim);
 
-similarity_t* similarity_cosine0_create(recdata_t* recdata);
+similarity_t* similarity_setcosine_create(recdata_t* recdata);
+
+similarity_t* similarity_veccosine_create(recdata_t* recdata);
 
 #endif

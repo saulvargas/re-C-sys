@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
     fclose(user_data);
     fclose(item_data);
 
-    similarity = similarity_cosine0_create(recdata);
+    similarity = similarity_veccosine_create(recdata);
 
     for (uid = 0; uid < recdata->N_users; uid++) {
         pairs = similarity_calculate(similarity, uid, 100);

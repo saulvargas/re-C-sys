@@ -31,7 +31,7 @@ idpairs_t* recommender_ubknn_recommend(int uid, int N, void* args) {
         s = idpairs_values(neighbors)[i];
         for (j = 0; j < idpairs_size(vd); j++) {
             iid = idpairs_keys(vd)[j];
-            scores[iid] += s;
+            scores[iid] += s * idpairs_values(vd)[j];
         }
         idpairs_close_shallow(vd);
     }
