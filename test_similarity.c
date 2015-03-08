@@ -10,13 +10,14 @@ int main(int argc, char** argv) {
     int N_users;
     int N_items;
     int N_prefs;
+    int binary;
     recdata_t* recdata;
     int uid;
     int i;
     similarity_t* similarity;
     idpairs_t* pairs;
 
-    if (argc != 4) {
+    if (argc != 5) {
         return EXIT_FAILURE;
     }    
     
@@ -25,13 +26,18 @@ int main(int argc, char** argv) {
     N_users = atoi(argv[1]);
     N_items = atoi(argv[2]);
     N_prefs = atoi(argv[3]);
+    binary = atoi(argv[4]);
 
-    recdata = recdata_simple_create(user_data, item_data, N_users, N_items, N_prefs);
+    recdata = recdata_simple_create(user_data, item_data, N_users, N_items, N_prefs, binary);
     
     fclose(user_data);
     fclose(item_data);
 
-    similarity = similarity_veccosine_create(recdata);
+    if (!binary) {
+        similarity = similarity_veccosine_create(recdata);
+    } else {
+        similarity = similarity_setcosine_create(recdata);
+    }
 
     for (uid = 0; uid < recdata->N_users; uid++) {
         pairs = similarity_calculate(similarity, uid, 100);

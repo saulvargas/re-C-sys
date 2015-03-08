@@ -6,9 +6,10 @@ typedef struct {
     recdata_t* recdata;
     similarity_t* similarity;
     int k;
-} recommender_ubknn_args_t;
+    int binary;
+} recommender_ub_args_t;
 
-idpairs_t* recommender_ubknn_recommend(int uid, int N, void* args) {
+idpairs_t* recommender_ub_recommend(int uid, int N, void* args) {
     idpairs_t* neighbors;
     idpairs_t* pairs;
     idpairs_t* vd;
@@ -18,9 +19,10 @@ idpairs_t* recommender_ubknn_recommend(int uid, int N, void* args) {
     double s;
     int iid;
     topn_t* topn;
-    recdata_t* recdata = ((recommender_ubknn_args_t*) args)->recdata;
-    similarity_t* similarity = ((recommender_ubknn_args_t*) args)->similarity;
-    int k = ((recommender_ubknn_args_t*) args)->k;
+    recdata_t* recdata = ((recommender_ub_args_t*) args)->recdata;
+    similarity_t* similarity = ((recommender_ub_args_t*) args)->similarity;
+    int k = ((recommender_ub_args_t*) args)->k;
+    int binary = ((recommender_ub_args_t*) args)->binary;
     
     double* scores = calloc(recdata->N_items, sizeof(double));
     
@@ -31,7 +33,7 @@ idpairs_t* recommender_ubknn_recommend(int uid, int N, void* args) {
         s = idpairs_values(neighbors)[i];
         for (j = 0; j < idpairs_size(vd); j++) {
             iid = idpairs_keys(vd)[j];
-            scores[iid] += s * idpairs_values(vd)[j];
+            scores[iid] += binary ? (s) : (s * idpairs_values(vd)[j]);
         }
         idpairs_close_shallow(vd);
     }
@@ -57,22 +59,23 @@ idpairs_t* recommender_ubknn_recommend(int uid, int N, void* args) {
 
 }
 
-void recommender_ubknn_close(void* args) {
+void recommender_ub_close(void* args) {
     free(args);
 }
 
-recommender_t* recommender_ubknn_create(recdata_t* recdata, similarity_t* similarity, int k) {
+recommender_t* recommender_ub_create(recdata_t* recdata, similarity_t* similarity, int k, int binary) {
     recommender_t* recommender;
-    recommender_ubknn_args_t* args;
+    recommender_ub_args_t* args;
     
     recommender = malloc(sizeof(recommender_t));
-    recommender->recommend = recommender_ubknn_recommend;
-    recommender->close = recommender_ubknn_close;
+    recommender->recommend = recommender_ub_recommend;
+    recommender->close = recommender_ub_close;
     
-    args = malloc(sizeof(recommender_ubknn_args_t));
+    args = malloc(sizeof(recommender_ub_args_t));
     args->recdata = recdata;
     args->similarity = similarity;
     args->k = k;
+    args->binary = binary;
     recommender->args = args;
     
     return recommender;

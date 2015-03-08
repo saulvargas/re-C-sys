@@ -27,6 +27,6 @@ idpairs_t* recdata_itemdata(recdata_t* recdata, int iid);
 
 void recdata_close(recdata_t* recdata);
 
-recdata_t* recdata_simple_create(FILE* user_data, FILE* item_data, int N_users, int N_items, int N_prefs);
+recdata_t* recdata_simple_create(FILE* user_data, FILE* item_data, int N_users, int N_items, int N_prefs, int binary);
 
 #endif
