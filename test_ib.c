@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
         similarity = similarity_setcosine_create(cerdata);
     }
 
-    recommender = recommender_ib_create(recdata, similarity, 100, binary);
+    recommender = recommender_ib_create(recdata, similarity, 10, binary);
 
     for (uid = 0; uid < recdata->N_users; uid++) {
         pairs = recommender_recommend(recommender, uid, 100);
