@@ -3,6 +3,10 @@
 #include <string.h>
 #include "recdata.h"
 
+void recdata_transposed_close(void* args) {
+    (void) args;
+}
+
 recdata_t* recdata_transposed_create(recdata_t* recdata0) {
     recdata_t* recdata;
     
@@ -15,7 +19,7 @@ recdata_t* recdata_transposed_create(recdata_t* recdata0) {
     recdata->itemdata_size = recdata0->userdata_size;
     recdata->userdata = recdata0->itemdata;
     recdata->itemdata = recdata0->userdata;
-    recdata->close = recdata0->close;
+    recdata->close = recdata_transposed_close;
     
     recdata->args = recdata0->args;
     
