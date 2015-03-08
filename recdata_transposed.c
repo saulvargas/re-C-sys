@@ -17,7 +17,7 @@ recdata_t* recdata_transposed_create(recdata_t* recdata0) {
     recdata->itemdata = recdata0->userdata;
     recdata->close = recdata0->close;
     
-    recdata->args = NULL;
+    recdata->args = recdata0->args;
     
     return recdata;    
 }

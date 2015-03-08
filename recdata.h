@@ -29,4 +29,6 @@ void recdata_close(recdata_t* recdata);
 
 recdata_t* recdata_simple_create(FILE* user_data, FILE* item_data, int N_users, int N_items, int N_prefs, int binary);
 
+recdata_t* recdata_transposed_create(recdata_t* recdata0);
+
 #endif
