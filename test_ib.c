@@ -1,9 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "recdata.h"
 #include "similarity.h"
 #include "topn.h"
 #include "recommender.h"
+#include "aux.h"
 
 int main(int argc, char** argv) {
     FILE* user_data;
@@ -20,16 +22,9 @@ int main(int argc, char** argv) {
     recommender_t* recommender;
     idpairs_t* pairs;
 
-    if (argc != 5) {
+    if (!read_args(argc, argv, &user_data, &item_data, &N_users, &N_items, &N_prefs, &binary)) {
         return EXIT_FAILURE;
-    }    
-    
-    user_data = fopen("total_u.txt", "r");
-    item_data = fopen("total_i.txt", "r");
-    N_users = atoi(argv[1]);
-    N_items = atoi(argv[2]);
-    N_prefs = atoi(argv[3]);
-    binary = atoi(argv[4]);
+    }
 
     recdata = recdata_simple_create(user_data, item_data, N_users, N_items, N_prefs, binary);
     cerdata = recdata_transposed_create(recdata);

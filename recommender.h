@@ -19,4 +19,6 @@ recommender_t* recommender_ub_create(recdata_t* recdata, similarity_t* similarit
 
 recommender_t* recommender_ib_create(recdata_t* recdata, similarity_t* similarity, int k, int binary);
 
+recommender_t* recommender_pop_create(recdata_t* recdata);
+
 #endif

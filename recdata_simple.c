@@ -58,22 +58,25 @@ void recdata_simple_close(void* args) {
 void read_data(int** n, int*** v, double*** r, FILE* data, int N, int N_prefs, int binary) {
     char line[MAX_LEN_LINE];
     int last_x;
+    int* last_p;
     int x;
     int y;
     double z;
     int* p;
     double* q;
 
-    *v = malloc(N * sizeof(int*));
+    *n = calloc(N, sizeof(int));
+    *v = calloc(N, sizeof(int*));
     p = malloc(N_prefs * sizeof(int));
     if (!binary) {
-        *r = malloc(N * sizeof(double*));
+        *r = calloc(N, sizeof(double*));
         q = malloc(N_prefs * sizeof(double));
     } else {
         *r = NULL;
         q = NULL;
     }
     last_x = -1;
+    last_p = p;
     while (fgets(line, MAX_LEN_LINE, data) != NULL) {
         x = atoi(strtok(line, "\t"));
         y = atoi(strtok(NULL, "\t"));
@@ -82,11 +85,15 @@ void read_data(int** n, int*** v, double*** r, FILE* data, int N, int N_prefs, i
         }
         
         if (x != last_x) {
+            if (last_x != -1) {
+                (*n)[last_x] = p - last_p;
+            }
             (*v)[x] = p;
             if (!binary) {
                 (*r)[x] = q;
             }
             last_x = x;
+            last_p = p;
         }
         *p = y;
         if (!binary) {
@@ -98,12 +105,7 @@ void read_data(int** n, int*** v, double*** r, FILE* data, int N, int N_prefs, i
             q++;
         }
     }
-    
-    *n = malloc(N * sizeof(int));
-    for (x = 0; x < N - 1; x++) {
-        (*n)[x] = (*v)[x + 1] - (*v)[x];
-    }
-    (*n)[x] = p - (*v)[x];
+    (*n)[x] = p - last_p;
 }
 
 recdata_t* recdata_simple_create(FILE* user_data, FILE* item_data, int N_users, int N_items, int N_prefs, int binary) {

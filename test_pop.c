@@ -16,7 +16,6 @@ int main(int argc, char** argv) {
     recdata_t* recdata;
     int uid;
     int i;
-    similarity_t* similarity;
     recommender_t* recommender;
     idpairs_t* pairs;
 
@@ -29,13 +28,7 @@ int main(int argc, char** argv) {
     fclose(user_data);
     fclose(item_data);
 
-    if (!binary) {
-        similarity = similarity_veccosine_create(recdata);
-    } else {
-        similarity = similarity_setcosine_create(recdata);
-    }
-
-    recommender = recommender_ub_create(recdata, similarity, 100, binary);
+    recommender = recommender_pop_create(recdata);
 
     for (uid = 0; uid < recdata->N_users; uid++) {
         pairs = recommender_recommend(recommender, uid, 100);
@@ -49,8 +42,6 @@ int main(int argc, char** argv) {
  
     recommender_close(recommender);
  
-    similarity_close(similarity);
-    
     recdata_close(recdata);
     
     return EXIT_SUCCESS;
