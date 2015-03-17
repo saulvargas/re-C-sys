@@ -3,43 +3,56 @@
 #include "topn.h"
 
 idpairs_t* recommender_pop_recommend(int uid, int N, void* args) {
+    idpairs_t* pairs;
+    idpairs_t* ud;
     int i;
-    int* keys = malloc(N * sizeof(int));
-    double* values = malloc(N * sizeof(double));
-    idpairs_t* pop = args;
+    int iid;
+    int jid;
+    topn_t* topn;
+    recdata_t* recdata = args;
     
-    (void) uid;
+    double* scores = calloc(recdata->N_items, sizeof(double));
     
-    for (i = 0; i < N; i++) {
-        keys[i] = idpairs_keys(pop)[i];
-        values[i] = idpairs_values(pop)[i];
+    for (iid = 0; iid < recdata->N_items; iid++) {
+        scores[iid] = recdata_itemdata_size(recdata, iid);
     }
 
-    return idpairs_create(N, keys, values);
+    ud = recdata_userdata(recdata, uid);
+    for (i = 0; i < idpairs_size(ud); i++) {
+        jid = idpairs_keys(ud)[i];
+        scores[jid] = 0.0;
+    }
+    idpairs_close_shallow(ud);
+
+    topn = topn_create(N);
+    for (iid = 0; iid < recdata->N_items; iid++) {
+        if (scores[iid] > 0) {
+            topn_add(topn, iid, scores[iid]);
+        }
+    }
+    
+    free(scores);
+
+    topn_sort(topn);
+    pairs = topn_get_pairs(topn);
+    idpairs_revert(pairs);
+    
+    topn_close(topn);
+
+    return pairs;
 }
 
 void recommender_pop_close(void* args) {
-    idpairs_close_deep(args);
+    (void) args;
 }
 
 recommender_t* recommender_pop_create(recdata_t* recdata) {
-    topn_t* topn;
-    int iid;
     recommender_t* recommender;
     
     recommender = malloc(sizeof(recommender_t));
     recommender->recommend = recommender_pop_recommend;
     recommender->close = recommender_pop_close;
-
-    topn = topn_create(recdata->N_items);
-    for (iid = 0; iid < recdata->N_items; iid++) {
-        topn_add(topn, iid, recdata_itemdata_size(recdata, iid));
-    }
-    
-    topn_sort(topn);
-    recommender->args = topn_get_pairs(topn);
-    idpairs_revert(recommender->args);
-    topn_close(topn);
+    recommender->args = recdata;
     
     return recommender;
 }

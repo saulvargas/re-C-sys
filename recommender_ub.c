@@ -12,12 +12,14 @@ typedef struct {
 idpairs_t* recommender_ub_recommend(int uid, int N, void* args) {
     idpairs_t* neighbors;
     idpairs_t* pairs;
+    idpairs_t* ud;
     idpairs_t* vd;
     int i;
     int j;
     int vid;
     double s;
     int iid;
+    int jid;
     topn_t* topn;
     recdata_t* recdata = ((recommender_ub_args_t*) args)->recdata;
     similarity_t* similarity = ((recommender_ub_args_t*) args)->similarity;
@@ -37,9 +39,15 @@ idpairs_t* recommender_ub_recommend(int uid, int N, void* args) {
         }
         idpairs_close_shallow(vd);
     }
-    
     idpairs_close_deep(neighbors);
-    
+
+    ud = recdata_userdata(recdata, uid);
+    for (i = 0; i < idpairs_size(ud); i++) {
+        jid = idpairs_keys(ud)[i];
+        scores[jid] = 0.0;
+    }
+    idpairs_close_shallow(ud);
+
     topn = topn_create(N);
     for (iid = 0; iid < recdata->N_items; iid++) {
         if (scores[iid] > 0) {
@@ -56,7 +64,6 @@ idpairs_t* recommender_ub_recommend(int uid, int N, void* args) {
     topn_close(topn);
 
     return pairs;
-
 }
 
 void recommender_ub_close(void* args) {

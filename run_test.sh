@@ -6,7 +6,7 @@ data=$3
 bin=$4
 codepath=`pwd`
 
-make test_${module}
+make test_${module} 1>&2
 
 cd $datapath
 

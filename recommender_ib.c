@@ -36,6 +36,13 @@ idpairs_t* recommender_ib_recommend(int uid, int N, void* args) {
     }
     idpairs_close_shallow(ud);
 
+    ud = recdata_userdata(recdata, uid);
+    for (i = 0; i < idpairs_size(ud); i++) {
+        jid = idpairs_keys(ud)[i];
+        scores[jid] = 0.0;
+    }
+    idpairs_close_shallow(ud);
+
     topn = topn_create(N);
     for (iid = 0; iid < recdata->N_items; iid++) {
         if (scores[iid] > 0) {
@@ -52,7 +59,6 @@ idpairs_t* recommender_ib_recommend(int uid, int N, void* args) {
     topn_close(topn);
 
     return pairs;
-
 }
 
 void recommender_ib_close(void* args) {
