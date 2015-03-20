@@ -3,22 +3,18 @@
 #include "topn.h"
 
 typedef struct {
-    recdata_t* recdata;
     idpairs_t** cached_neighbors;
     int binary;
 } recommender_ib_args_t;
 
-idpairs_t* recommender_ib_recommend(int uid, int N, void* args) {
+double* recommender_ib_recommend(int uid, recdata_t* recdata, void* args) {
     idpairs_t* neighbors;
-    idpairs_t* pairs;
     idpairs_t* ud;
     int i;
     int j;
-    int jid;
     double s;
     int iid;
-    topn_t* topn;
-    recdata_t* recdata = ((recommender_ib_args_t*) args)->recdata;
+    int jid;
     idpairs_t** cached_neighbors = ((recommender_ib_args_t*) args)->cached_neighbors;
     int binary = ((recommender_ib_args_t*) args)->binary;
     
@@ -36,37 +32,15 @@ idpairs_t* recommender_ib_recommend(int uid, int N, void* args) {
     }
     idpairs_close_shallow(ud);
 
-    ud = recdata_userdata(recdata, uid);
-    for (i = 0; i < idpairs_size(ud); i++) {
-        jid = idpairs_keys(ud)[i];
-        scores[jid] = 0.0;
-    }
-    idpairs_close_shallow(ud);
-
-    topn = topn_create(N);
-    for (iid = 0; iid < recdata->N_items; iid++) {
-        if (scores[iid] > 0) {
-            topn_add(topn, iid, scores[iid]);
-        }
-    }
-    
-    free(scores);
-
-    topn_sort(topn);
-    pairs = topn_get_pairs(topn);
-    idpairs_revert(pairs);
-    
-    topn_close(topn);
-
-    return pairs;
+    return scores;
 }
 
-void recommender_ib_close(void* args) {
+void recommender_ib_close(recdata_t* recdata, void* args) {
     int iid;
     int N_items;
     recommender_ib_args_t* a = args;
     
-    N_items = a->recdata->N_items;
+    N_items = recdata->N_items;
     for (iid = 0; iid < N_items; iid++) {
         idpairs_close_deep(a->cached_neighbors[iid]);
     }
@@ -94,9 +68,9 @@ recommender_t* recommender_ib_create(recdata_t* recdata, similarity_t* similarit
     recommender = malloc(sizeof(recommender_t));
     recommender->recommend = recommender_ib_recommend;
     recommender->close = recommender_ib_close;
+    recommender->recdata = recdata;
     
     args = malloc(sizeof(recommender_ib_args_t));
-    args->recdata = recdata;
     args->cached_neighbors = calculate_neighbors(recdata->N_items, similarity, k);
     args->binary = binary;
     recommender->args = args;

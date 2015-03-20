@@ -6,8 +6,9 @@
 #include "similarity.h"
 
 typedef struct recommender_ {
-    idpairs_t* (* recommend)(int uid, int n, void* args);
-    void (* close)(void* args);
+    double* (* recommend)(int uid, recdata_t* recdata, void* args);
+    void (* close)(recdata_t* recdata, void* args);
+    recdata_t* recdata;
     void* args;
 } recommender_t;
 
