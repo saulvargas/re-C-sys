@@ -12,11 +12,11 @@ int read_args(int argc, char** argv, FILE** user_data, FILE** item_data, int* N_
     file = malloc((strlen(argv[1]) + 7) * sizeof(char));
 
     strcpy(file, argv[1]);
-    strcat(file, "_u.txt");
+    strcat(file, ".u");
     *user_data = fopen(file, "r");
 
     strcpy(file, argv[1]);
-    strcat(file, "_i.txt");
+    strcat(file, ".i");
     *item_data = fopen(file, "r");
     
     free(file);
