@@ -10,6 +10,15 @@ make test_${module} > /dev/null
 
 cd $datapath
 
-${codepath}/test_${module} $data `wc -l < u.txt` `wc -l < i.txt` `wc -l < total_u.txt` $bin
+info=()
+while read l
+do
+    info+=( $l ); 
+done < info.txt
+u=${info[0]}
+i=${info[1]}
+p=${info[2]}
+
+${codepath}/test_${module} $data $u $i $p $bin
 
 cd $codepath
